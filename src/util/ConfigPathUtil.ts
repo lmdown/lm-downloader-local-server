@@ -7,6 +7,8 @@ export default class ConfigPathUtil {
 
   static CONFIG_FILE_NAME: string = 'lmd_base_config.env';
 
+  static GLOBAL_ENV_FILE_NAME: string = 'lmd_global_variables.env';
+
   static getRootDir() {
     const USER_HOME = process.env.HOME || process.env.USERPROFILE
     const userDocumentsPath = path.join(USER_HOME, 'Documents');
@@ -24,5 +26,10 @@ export default class ConfigPathUtil {
     return configFilePath
   }
 
+
+  static getGlobalEnvFilePath() {
+    const {rootDir} = ConfigPathUtil.getRootDir()
+    return path.join(rootDir, this.GLOBAL_ENV_FILE_NAME);
+  }
 
 }

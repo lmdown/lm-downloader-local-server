@@ -2,6 +2,7 @@ import WebSocket, { WebSocketServer } from 'ws';
 import http from 'http';
 import { IPty } from 'node-pty';
 import { Express } from "express-serve-static-core";
+import ConfigUtil from '@/util/ConfigUtil';
 const pty = require('node-pty');
 
 const os = require('os')
@@ -19,15 +20,26 @@ class WSServer {
     this.setupEventHandlers()
   }
 
+  getFullEnvForApp() {
+    let fullEnv = process.env
+    const baseConfig = ConfigUtil.getBaseConfig()
+    const globalEnv = ConfigUtil.getGlobalEnv()
+    fullEnv = Object.assign(fullEnv, baseConfig)
+    fullEnv = Object.assign(fullEnv, globalEnv)
+    return fullEnv
+  }
+
   setupEventHandlers() {
     this.wss.on('connection', (ws) => {
         // console.log('socket connection success');
+        const fullEnv = this.getFullEnvForApp()
+
         const ptyProcess: IPty = pty.spawn(shell, [], {
           name: 'lmd-xterm',
           cols: 80,
           rows: 30,
           cwd: process.env.HOME,
-          env: process.env
+          env: fullEnv
         });
 
         // console.log('Created terminal with PID: ' + ptyProcess.pid)
