@@ -1,0 +1,49 @@
+{
+  "name": "lm-downloader-local-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "scripts": {
+    "clean": "rimraf dist",
+    "dev": "tsx watch --clear-screen=false src/start.ts | pino-pretty",
+    "build": "npm run clean && tsup --no-sourcemap",
+    "start": "node dist/start.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "envalid": "^8.0.0",
+    "express": "^4.17.1",
+    "node-pty": "1.1.0-beta27",
+    "pino": "^9.4.0",
+    "sequelize": "^6.37.5",
+    "sqlite3": "^5.1.7",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/sqlite3": "^3.1.11",
+    "@types/ws": "8.5.13",
+    "pino-pretty": "^11.0.0",
+    "rimraf": "^6.0.1",
+    "ts-node": "^10.9.2",
+    "tsup": "^8.0.2",
+    "tsx": "^4.7.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.0.0"
+  },
+  "tsup": {
+    "entry": [
+      "src",
+      "!src/**/__tests__/**",
+      "!src/**/*.test.*"
+    ],
+    "splitting": false,
+    "sourcemap": true,
+    "clean": true
+  },
+  "serverPort": 4000
+}
