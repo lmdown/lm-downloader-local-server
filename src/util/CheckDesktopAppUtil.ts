@@ -34,22 +34,29 @@ export default class CheckVersionUtil {
     let appFullPath
     if(SystemCheckUtil.isMacOS()) {
       appInstallPath = envData._MAC_INSTALL_PATH
-      if (envData._MAC_INSTALL_FILE_NAME) {
-        appFullPath = path.join(appInstallPath, envData._MAC_INSTALL_FILE_NAME)
+      if (envData._MAC_INSTALL_TARGET_FILE_NAME) {
+        appFullPath = path.join(appInstallPath, envData._MAC_INSTALL_TARGET_FILE_NAME)
       }
-      if (envData._VERSION_DETECTABLE !== '0' && appFullPath) {
-        try {
-          version = await this.checkVersion(appFullPath)
-        } catch(err) {
-          console.error(err)
-        }
+    } else if(SystemCheckUtil.isWindows()) {
+      if (envData._WINDOWS_INSTALL_TARGET_FILE_NAME) {
+        appFullPath = path.join(appInstallPath, envData._WINDOWS_INSTALL_TARGET_FILE_NAME)
       }
-      realVersionInfo = {
-        version,
-        appInstallPath,
-        appFullPath
-      } as RealVersionInfo
     }
+    console.log('appFullPath', appFullPath)
+    if (envData._VERSION_DETECTABLE !== '0' && appFullPath) {
+      try {
+        version = await this.checkVersion(appFullPath)
+      } catch(err) {
+        console.error(err)
+      }
+    }
+
+    realVersionInfo = {
+      version,
+      appInstallPath,
+      appFullPath
+    } as RealVersionInfo
+
     // TODO: windows and linux
     return realVersionInfo
   }

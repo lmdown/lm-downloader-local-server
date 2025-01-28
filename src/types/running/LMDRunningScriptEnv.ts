@@ -6,6 +6,8 @@ export default interface LMDRunningScriptEnv extends LMDEnv {
 
   _MAC_INSTALL_PATH: string
 
-  _MAC_INSTALL_FILE_NAME: string
+  _MAC_INSTALL_TARGET_FILE_NAME: string
+
+  _WINDOWS_INSTALL_TARGET_FILE_NAME: string
 
 }

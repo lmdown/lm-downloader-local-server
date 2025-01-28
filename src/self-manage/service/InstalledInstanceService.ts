@@ -5,6 +5,7 @@ import { app } from "@/server";
 import { AIAppDTO } from "@/types/AIAppDTO";
 import AIAppInfoService from "@/app-store/service/aiAppInfoService";
 import CheckVersionUtil from "@/util/CheckDesktopAppUtil";
+import RealVersionInfo from "@/types/running/RealVersionInfo";
 
 export default class InstalledInstanceService {
 
@@ -101,7 +102,7 @@ export default class InstalledInstanceService {
   }
 
   async fillRealVersion(dto: InstalledInstanceDTO, instance: InstalledInstance): Promise<string> {
-    const realVersionInfo = await CheckVersionUtil.checkVersionByName(instance.installName)
+    const realVersionInfo = await CheckVersionUtil.checkVersionByName(instance.installName) || {} as RealVersionInfo
     dto.version = realVersionInfo.version
     dto.appFullPath = realVersionInfo.appFullPath
     dto.appInstallPath = realVersionInfo.appInstallPath
