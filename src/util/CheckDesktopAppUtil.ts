@@ -28,21 +28,22 @@ export default class CheckVersionUtil {
         console.error('read app env error ', err)
       }
     }
-    let version = '--'
-    let realVersionInfo
-    let appInstallPath
-    let appFullPath
-    if(SystemCheckUtil.isMacOS()) {
-      appInstallPath = envData._MAC_INSTALL_PATH
-      if (envData._MAC_INSTALL_TARGET_FILE_NAME) {
-        appFullPath = path.join(appInstallPath, envData._MAC_INSTALL_TARGET_FILE_NAME)
-      }
-    } else if(SystemCheckUtil.isWindows()) {
-      if (envData._WINDOWS_INSTALL_TARGET_FILE_NAME) {
-        appFullPath = path.join(appInstallPath, envData._WINDOWS_INSTALL_TARGET_FILE_NAME)
-      }
+    let version: string = "--";
+    let realVersionInfo: RealVersionInfo;
+    let appInstallPath: string;
+    let appFullPath: string;
+    let fileName: string;
+    if (SystemCheckUtil.isMacOS()) {
+      appInstallPath = envData._MAC_INSTALL_PATH;
+      fileName = envData._MAC_INSTALL_TARGET_FILE_NAME || envData._MAC_INSTALLER_FILE_NAME;
+    } else if (SystemCheckUtil.isWindows()) {
+      appInstallPath = envData._WINDOWS_INSTALL_PATH;
+      fileName = envData._WINDOWS_INSTALL_TARGET_FILE_NAME || envData._WINDOWS_INSTALLER_FILE_NAME;
     }
-    console.log('appFullPath', appFullPath)
+    if (fileName) {
+      appFullPath = path.join(appInstallPath, fileName);
+    }
+
     if (envData._VERSION_DETECTABLE !== '0' && appFullPath) {
       try {
         version = await this.checkVersion(appFullPath)

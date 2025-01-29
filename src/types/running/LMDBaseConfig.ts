@@ -1,4 +1,4 @@
-import LMDEnv from "../LMDEnv"
+import LMDEnv from './LMDEnv'
 
 export default interface LMDBaseConfig extends LMDEnv {
   // 配置，数据，AI应用，模型等所有文件的根目录
@@ -11,4 +11,8 @@ export default interface LMDBaseConfig extends LMDEnv {
   LMD_APPS_DIR: string
 
   LMD_LOCALE: string
+
+  // git安装目录，可访问git和bash命令
+  GIT_INSTALL_PATH: string
+
 }
