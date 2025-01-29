@@ -12,7 +12,4 @@ export default interface LMDBaseConfig extends LMDEnv {
 
   LMD_LOCALE: string
 
-  // git安装目录，可访问git和bash命令
-  GIT_INSTALL_PATH: string
-
 }
