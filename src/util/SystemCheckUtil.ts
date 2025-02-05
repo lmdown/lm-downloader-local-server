@@ -7,4 +7,9 @@ export default class SystemCheckUtil {
     return platform === 'darwin'
   }
 
+  static isWindows() {
+    const platform = os.platform();
+    return platform === 'win32'
+  }
+
 }
