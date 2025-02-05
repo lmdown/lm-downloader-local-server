@@ -3,11 +3,13 @@ import http from 'http';
 import { IPty } from 'node-pty';
 import { Express } from "express-serve-static-core";
 import ConfigUtil from '@/util/ConfigUtil';
+import ShellExecUtil from '@/util/ShellExecUtil';
 const pty = require('node-pty');
 
 const os = require('os')
 // const pty = require('node-pty');
-const shell = os.platform() === 'win32' ? 'powershell.exe' : 'bash';
+
+const shell = ShellExecUtil.getExecPath()
 
 class WSServer {
   private wss: WebSocketServer
