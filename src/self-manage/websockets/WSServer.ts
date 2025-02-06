@@ -4,6 +4,8 @@ import { IPty } from 'node-pty';
 import { Express } from "express-serve-static-core";
 import ConfigUtil from '@/util/ConfigUtil';
 import ShellExecUtil from '@/util/ShellExecUtil';
+import SystemCheckUtil from '@/util/SystemCheckUtil';
+import CopyValueUtil from '@/util/CopyValueUtil';
 const pty = require('node-pty');
 
 const os = require('os')
@@ -23,7 +25,17 @@ class WSServer {
   }
 
   getFullEnvForApp() {
-    let fullEnv = process.env
+    const processEnv = process.env
+    let fullEnv = {}
+
+    if(SystemCheckUtil.isWindows()) {
+      fullEnv =  CopyValueUtil.copySomeEnvVars()
+    } else {
+      fullEnv = {
+        HOME: processEnv.HOME
+      }
+    }
+
     const baseConfig = ConfigUtil.getBaseConfig()
     const globalEnv = ConfigUtil.getGlobalEnv()
     fullEnv = Object.assign(fullEnv, baseConfig)
