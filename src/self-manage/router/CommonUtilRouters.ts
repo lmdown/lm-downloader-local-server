@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import path from 'path';
 import SystemInfoUtil from '@/util/SystemInfoUtil';
 import FileInfoUtil from '@/util/FileInfoUtil';
+import AppModelsUtil from '@/util/app-running/AppModelsUtil';
 
 const router = express.Router();
 
@@ -27,6 +28,15 @@ router.get('/user-home-dir', (req:Request, res:Response) => {
   const userHomeDir = process.env.HOME
   res.json({
     userHomeDir
+  });
+});
+
+// get all models for app
+router.get('/installed-model-files/:appInstallName', (req:Request, res:Response) => {
+  const appInstallName = req.params.appInstallName
+  const models = AppModelsUtil.getAllModels(appInstallName)
+  res.json({
+    models: models
   });
 });
 
