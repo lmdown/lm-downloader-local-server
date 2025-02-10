@@ -1,11 +1,14 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs'
+import path from 'path';
 
 export default class FileInfoUtil {
 
   static getDirSize(dirPath: string): number {
     let totalSize = 0;
-
+    if (!fs.existsSync(dirPath)) {
+      console.error('dir dose not exist.', dirPath)
+      return totalSize
+    }
     const files = fs.readdirSync(dirPath);
 
     files.forEach(file => {

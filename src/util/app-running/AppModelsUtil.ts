@@ -21,7 +21,8 @@ export default class AppModelsUtil {
       output = stdout.toString()
       // console.log( stdout.toString())
     } catch (error) {
-      console.error('extract portable git err', error);
+      console.error('run ollama list error', error);
+      return []
     }
 
     // 将输出按行分割
