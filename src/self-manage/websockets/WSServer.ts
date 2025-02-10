@@ -29,12 +29,13 @@ class WSServer {
     let fullEnv = {}
 
     if(SystemCheckUtil.isWindows()) {
-      fullEnv =  CopyValueUtil.copySomeEnvVars()
+      fullEnv =  CopyValueUtil.copySomeEnvVarsWindows()
     } else {
       fullEnv = {
         HOME: processEnv.HOME
       }
     }
+    fullEnv = Object.assign(fullEnv, CopyValueUtil.copyOllamaEnvVars())
 
     const baseConfig = ConfigUtil.getBaseConfig()
     const globalEnv = ConfigUtil.getGlobalEnv()
