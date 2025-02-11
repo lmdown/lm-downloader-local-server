@@ -38,7 +38,7 @@ export default class CheckVersionUtil {
       fileName = envData._MAC_INSTALL_TARGET_FILE_NAME || envData._MAC_INSTALLER_FILE_NAME;
     } else if (SystemCheckUtil.isWindows()) {
       appInstallPath = envData._WINDOWS_INSTALL_PATH;
-      fileName = envData._WINDOWS_INSTALL_TARGET_FILE_NAME || envData._WINDOWS_INSTALLER_FILE_NAME;
+      // fileName = envData._WINDOWS_INSTALL_TARGET_FILE_NAME || envData._WINDOWS_INSTALLER_FILE_NAME;
     }
     if (fileName) {
       appFullPath = path.join(appInstallPath, fileName);
