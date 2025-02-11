@@ -22,6 +22,7 @@ export interface AIAppDTO {
   releaseTime: string
   licenseInfo: string
   accessInfo: AccessInfo
+  snapshots: string[]
 }
 
 export interface InstallLimitDTO {
