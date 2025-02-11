@@ -110,6 +110,17 @@ export default class AIAppInfoService {
     }
   }
 
+
+  fillSnapshots(aiApp: AIAppDTO) {
+    try {
+      if(aiApp.snapshots && typeof aiApp.snapshots === 'string') {
+        aiApp.snapshots = (aiApp.snapshots as string).split(',')
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   fillDescData(aiAppDTO: AIAppDTO, descItem: AIAppDesc | undefined | null) {
     if(descItem) {
       aiAppDTO.name = descItem.name;
@@ -170,6 +181,7 @@ export default class AIAppInfoService {
     this.fillDownloadInfo(aiAppInfoDTO)
     this.fillLicenseInfo(aiAppInfoDTO)
     this.fillRefLinks(aiAppInfoDTO)
+    this.fillSnapshots(aiAppInfoDTO)
     // const latestVersion = this.getAppLatestVersion(queryConditions);
     // aiAppInfoDTO.newVersion = latestVersion.
     return aiAppInfoDTO

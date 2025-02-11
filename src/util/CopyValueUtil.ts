@@ -1,6 +1,6 @@
 export default class CopyValueUtil {
 
-  static copySomeEnvVars():Object {
+  static copySomeEnvVarsWindows():Object {
     const envVars = [
       'ALLUSERSPROFILE',
       'APPDATA',
@@ -44,6 +44,17 @@ export default class CopyValueUtil {
       'USERPROFILE',
       'windir',
     ]
+    return this.copySpecificKeys(process.env, envVars)
+  }
+
+  static copyOllamaEnvVars():Object {
+    const allEnv = process.env
+    const envVars = []
+    for(const envKey in allEnv) {
+      if(envKey.startsWith('OLLAMA')) {
+        envVars.push(envKey)
+      }
+    }
     return this.copySpecificKeys(process.env, envVars)
   }
 
