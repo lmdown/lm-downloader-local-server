@@ -1,6 +1,7 @@
 import os from 'os'
 import SystemCheckUtil from './SystemCheckUtil';
 import { execSync } from 'child_process';
+import SystemCommandUtil from './SystemCommandUtil';
 
 export default class SystemInfoUtil {
 
@@ -33,36 +34,34 @@ export default class SystemInfoUtil {
     let command = ''
     if(SystemCheckUtil.isMacOS()) {
       command = `launchctl getenv ${key}`
-      try {
-        const stdout = execSync(command);
-        let result = stdout.toString()
-        if(result) {
-          result = result.trim()
-        }
-        console.log('got env', key, result)
-        return result
-      } catch (error) {
-        console.error('getOSEnv err', error);
-        return ''
-      }
+    } else if(SystemCheckUtil.isWindows()) {
+      return process.env[key]
+    }
+    if(command) {
+      return SystemCommandUtil.runCommand(command)
     }
   }
 
   static setOSEnv(key: string, value: string) {
     let command = ''
+    if(value === '') {
+      value = '\"\"'
+    }
     if(SystemCheckUtil.isMacOS()) {
-      if(value === '') {
-        value = '\"\"'
-      }
       command = `launchctl setenv ${key} ${value}`
-      console.log('command', command)
+    } else if(SystemCheckUtil.isWindows()) {
+      command = `setx ${key} ${value}`
+    }
+    console.log('setOSEnv command', command)
+    if(command) {
       try {
         const stdout = execSync(command);
         const result = stdout.toString()
         console.log('set env', key, result)
+        process.env[key] = value
         return result
       } catch (error) {
-        console.error('setOSEnv err', error);
+      console.error('setOSEnv err', error);
         throw error
       }
     }
