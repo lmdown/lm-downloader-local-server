@@ -32,7 +32,8 @@ class WSServer {
       fullEnv =  CopyValueUtil.copySomeEnvVarsWindows()
     } else {
       fullEnv = {
-        HOME: processEnv.HOME
+        HOME: processEnv.HOME,
+        PATH: processEnv.PATH
       }
     }
     fullEnv = Object.assign(fullEnv, CopyValueUtil.copyOllamaEnvVars())
