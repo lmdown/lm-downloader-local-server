@@ -3,6 +3,7 @@ import path from 'path';
 import SystemInfoUtil from '@/util/SystemInfoUtil';
 import FileInfoUtil from '@/util/FileInfoUtil';
 import AppModelsUtil from '@/util/app-running/AppModelsUtil';
+import os from 'os'
 
 const router = express.Router();
 
@@ -25,7 +26,7 @@ router.get('/lan-ip', (req:Request, res:Response) => {
 });
 
 router.get('/user-home-dir', (req:Request, res:Response) => {
-  const userHomeDir = process.env.HOME
+  const userHomeDir = os.homedir() //process.env.HOME
   res.json({
     userHomeDir
   });
@@ -56,7 +57,7 @@ router.post('/app-running-base-env-info', (req:Request, res:Response) => {
   const keys: string[] = req.body.keys
   const resultObj = {}
   keys.forEach(key => {
-    resultObj[key] = SystemInfoUtil.getOSEnv(key)
+    resultObj[key] = SystemInfoUtil.getOSEnv(key) || ''
   })
   res.json(resultObj);
 });
