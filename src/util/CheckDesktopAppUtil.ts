@@ -31,7 +31,7 @@ export default class CheckVersionUtil {
     // const configFilePath = ConfigPathUtil.getConfigFilePath()
     const config = ConfigUtil.getBaseConfig()
     const appScriptRepoDir = await this.getLMDAppScriptRepoDir(String(appId))
-    console.log('appScriptRepoDir appId appScriptRepoDir ', appId, appScriptRepoDir)
+
     const appScriptPath = path.join(config.LMD_SCRIPTS_DIR, `${appScriptRepoDir}/apps`, appInstallName)
     const appInstallEnvPath = path.join(appScriptPath, 'env')
     let envData: LMDRunningScriptEnv = {} as LMDRunningScriptEnv
@@ -49,7 +49,6 @@ export default class CheckVersionUtil {
     let appFullPath: string;
     let fileName: string;
     if (SystemCheckUtil.isMacOS()) {
-      console.log('envData检查安装目录', envData)
       appInstallPath = envData._MAC_INSTALL_PATH;
       fileName = envData._MAC_INSTALL_TARGET_FILE_NAME || envData._MAC_INSTALLER_FILE_NAME;
     } else if (SystemCheckUtil.isWindows()) {
@@ -60,9 +59,14 @@ export default class CheckVersionUtil {
       appFullPath = path.join(appInstallPath, fileName);
     }
 
-    if (envData._VERSION_DETECTABLE !== '0' && appFullPath) {
+    if (envData._VERSION_DETECTABLE !== '0' && (appInstallPath || appFullPath) ) {
       try {
-        version = await this.checkVersion(appFullPath)
+        const versionDetectType = envData._VERSION_DETECT_TYPE
+        if(versionDetectType) {
+          version = await this.checkVersionByProjFiles(appInstallPath, appFullPath, versionDetectType)
+        } else {
+          version = await this.checkVersion(appFullPath)
+        }
       } catch(err) {
         console.error(err)
       }
@@ -76,6 +80,23 @@ export default class CheckVersionUtil {
 
     // TODO: windows and linux
     return realVersionInfo
+  }
+
+  static async checkVersionByProjFiles(appInstallPath: string, appFullPath: string, versionDetectType: string): Promise<string> {
+    // _VERSION_DETECTABLE=1
+    // _VERSION_DETECT_TYPE="node.js"
+    if(versionDetectType === 'node.js') {
+      try {
+        const packageJsonPath = path.resolve(appInstallPath, 'package.json');
+        const data = fs.readFileSync(packageJsonPath, 'utf8');
+        const packageJson = JSON.parse(data);
+        console.log(`Project version: ${packageJson.version}`);
+        return packageJson.version
+      } catch (err) {
+        console.error('Error reading or parsing package.json:', err);
+      }
+    }
+    return '--'
   }
 
   static async checkVersion(appFullFilePath: string): Promise<string> {

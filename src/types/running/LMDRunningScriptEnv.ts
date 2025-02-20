@@ -4,6 +4,8 @@ export default interface LMDRunningScriptEnv extends LMDEnv {
 
   _VERSION_DETECTABLE: string
 
+  _VERSION_DETECT_TYPE: string
+
   _MAC_INSTALL_PATH: string
 
   _MAC_INSTALL_TARGET_FILE_NAME: string
