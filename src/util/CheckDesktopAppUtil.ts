@@ -7,17 +7,32 @@ import LMDRunningScriptEnv from "@/types/running/LMDRunningScriptEnv";
 import RealVersionInfo from "@/types/running/RealVersionInfo";
 import SystemCheckUtil from "./SystemCheckUtil";
 import ReplaceUtil from "./ReplaceUtil";
+import AIAppInfoService from "@/app-store/service/aiAppInfoService";
+import AppScriptRepoUtil from "./app-running/AppScriptRepoUtil";
 
 const { exec } = require('child_process');
 const os = require('os');
 
 export default class CheckVersionUtil {
 
-  static async checkVersionByName(appInstallName: string): Promise<RealVersionInfo> {
+  // the Dir name of App Install Script Repository
+  static async getLMDAppScriptRepoDir(appId: string): Promise<string> {
+    const svr: AIAppInfoService = new AIAppInfoService()
+    let appBaseInfo
+    if(appId) {
+      appBaseInfo = await svr.getAIAppBaseInfoById(appId)
+    }
+    const {repoLocalFolderName} = AppScriptRepoUtil.getLMDScriptRepoUrl(appBaseInfo)
+    return repoLocalFolderName
+  }
+
+  static async checkVersionByName(appInstallName: string, appId: string | number = ''): Promise<RealVersionInfo> {
     // read env file from install folder
     // const configFilePath = ConfigPathUtil.getConfigFilePath()
     const config = ConfigUtil.getBaseConfig()
-    const appScriptPath = path.join(config.LMD_SCRIPTS_DIR, 'lmd-install-scripts/apps', appInstallName)
+    const appScriptRepoDir = await this.getLMDAppScriptRepoDir(String(appId))
+    console.log('appScriptRepoDir appId appScriptRepoDir ', appId, appScriptRepoDir)
+    const appScriptPath = path.join(config.LMD_SCRIPTS_DIR, `${appScriptRepoDir}/apps`, appInstallName)
     const appInstallEnvPath = path.join(appScriptPath, 'env')
     let envData: LMDRunningScriptEnv = {} as LMDRunningScriptEnv
     if(fs.existsSync(appScriptPath)) {
@@ -34,6 +49,7 @@ export default class CheckVersionUtil {
     let appFullPath: string;
     let fileName: string;
     if (SystemCheckUtil.isMacOS()) {
+      console.log('envData检查安装目录', envData)
       appInstallPath = envData._MAC_INSTALL_PATH;
       fileName = envData._MAC_INSTALL_TARGET_FILE_NAME || envData._MAC_INSTALLER_FILE_NAME;
     } else if (SystemCheckUtil.isWindows()) {

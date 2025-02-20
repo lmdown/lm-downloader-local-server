@@ -14,6 +14,10 @@ export default class InstalledInstanceService {
 
   async getInstalledInstanceList() {
     const instances = await InstalledInstance.findAll({
+      order: [
+        ['update_time', 'DESC'],
+        ['id', 'DESC']
+      ],
       raw: true, where: {},
       attributes: { exclude: ['create_time', 'update_time'] }
     });
@@ -102,7 +106,8 @@ export default class InstalledInstanceService {
   }
 
   async fillRealVersion(dto: InstalledInstanceDTO, instance: InstalledInstance): Promise<string> {
-    const realVersionInfo = await CheckVersionUtil.checkVersionByName(instance.installName) || {} as RealVersionInfo
+    const realVersionInfo =
+      await CheckVersionUtil.checkVersionByName(instance.installName, instance.appId) || {} as RealVersionInfo
     dto.version = realVersionInfo.version
     dto.appFullPath = realVersionInfo.appFullPath
     dto.appInstallPath = realVersionInfo.appInstallPath

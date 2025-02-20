@@ -187,6 +187,20 @@ export default class AIAppInfoService {
     return aiAppInfoDTO
   }
 
+  // Only return base info
+  async getAIAppBaseInfoById(id: string): Promise<AIAppDTO> {
+    const aiApp = await AIApp.findOne({ raw: true, where: { id } });
+    if(!aiApp) {
+      return {} as AIAppDTO
+    }
+    let aiAppInfoDTO: AIAppDTO
+    aiAppInfoDTO = Object.assign({} as AIAppDTO, aiApp)
+    const queryConditions = {where: {appId: id} }
+    const aiAppDesc = await AIAppDesc.findOne(queryConditions)
+    this.fillDownloadInfo(aiAppInfoDTO)
+    return aiAppInfoDTO
+  }
+
   async getAIAppIcon(appId: string) {
     const aiApp = await AIApp.findOne({
       raw: true,
