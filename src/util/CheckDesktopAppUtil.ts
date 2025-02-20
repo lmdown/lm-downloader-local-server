@@ -10,8 +10,8 @@ import ReplaceUtil from "./ReplaceUtil";
 import AIAppInfoService from "@/app-store/service/aiAppInfoService";
 import AppScriptRepoUtil from "./app-running/AppScriptRepoUtil";
 
-const { exec } = require('child_process');
-const os = require('os');
+import { exec } from 'child_process'
+import os from 'os'
 
 export default class CheckVersionUtil {
 
@@ -85,18 +85,21 @@ export default class CheckVersionUtil {
   static async checkVersionByProjFiles(appInstallPath: string, appFullPath: string, versionDetectType: string): Promise<string> {
     // _VERSION_DETECTABLE=1
     // _VERSION_DETECT_TYPE="node.js"
+    let version: string
     if(versionDetectType === 'node.js') {
       try {
         const packageJsonPath = path.resolve(appInstallPath, 'package.json');
         const data = fs.readFileSync(packageJsonPath, 'utf8');
         const packageJson = JSON.parse(data);
         console.log(`Project version: ${packageJson.version}`);
-        return packageJson.version
+        version = packageJson.version
       } catch (err) {
         console.error('Error reading or parsing package.json:', err);
       }
+    } else if (versionDetectType === 'python') {
+      version = this.getPythonProjectVersion(path.resolve(appInstallPath, 'pyproject.toml'))
     }
-    return '--'
+    return version
   }
 
   static async checkVersion(appFullFilePath: string): Promise<string> {
@@ -174,6 +177,19 @@ export default class CheckVersionUtil {
       });
     }
     })
+  }
+
+  static getPythonProjectVersion(filePath: string): string | null {
+    try {
+      const content = fs.readFileSync(filePath, 'utf-8')
+      const versionMatch = content.match(/version\s*=\s*(["']?)([^"'\s]+)\1/);
+      if (versionMatch && versionMatch[2]) {
+          return versionMatch[2]
+      }
+    } catch (err) {
+      console.log('getPythonProjectVersion err ',err)
+    }
+    return null
   }
 
 }
