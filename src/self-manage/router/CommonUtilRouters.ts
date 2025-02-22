@@ -4,6 +4,7 @@ import SystemInfoUtil from '@/util/SystemInfoUtil';
 import FileInfoUtil from '@/util/FileInfoUtil';
 import AppModelsUtil from '@/util/app-running/AppModelsUtil';
 import os from 'os'
+import DirInfoUtil from '@/util/DirInfoUtil';
 
 const router = express.Router();
 
@@ -37,7 +38,7 @@ router.get('/installed-model-files/:appInstallName', async (req:Request, res:Res
   const appInstallName = req.params.appInstallName
   const models = await AppModelsUtil.getAllModels(appInstallName)
   res.json({
-    models: models
+    models: models || []
   });
 });
 
@@ -48,6 +49,12 @@ router.get('/dir-file-size', (req:Request, res:Response) => {
     dirPath,
     fileSize
   });
+});
+
+router.get('/dir-and-disk-info', (req:Request, res:Response) => {
+  const dirPath = String(req.query.dirPath)
+  const dirInfo = DirInfoUtil.getDirInfo(dirPath) || {}
+  res.json(dirInfo);
 });
 
 /**
