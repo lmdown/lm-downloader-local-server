@@ -1,15 +1,20 @@
 import InstalledModel from "@/types/running/app-running/InstalledModel";
+import OllamaAPIUtil from "./OllamaAPIUtil";
 
 const { execSync } = require('child_process');
 
 export default class AppModelsUtil {
 
 
-  static getAllModels(appInstallName: string): InstalledModel[] {
+  static async getAllModels(appInstallName: string): Promise<InstalledModel[]> {
     if(appInstallName === 'ollama') {
-      return this.getOllamaAllModels()
+      return await this.getOllamaAllModelsHttpAPI()
     }
     return []
+  }
+
+  static async getOllamaAllModelsHttpAPI() {
+    return await OllamaAPIUtil.getInstalledModels()
   }
 
   static getOllamaAllModels() {
@@ -17,7 +22,6 @@ export default class AppModelsUtil {
     let output = ''
     try {
       const stdout = execSync(command);
-      console.log('got model list: ', stdout.toString())
       output = stdout.toString()
       // console.log( stdout.toString())
     } catch (error) {

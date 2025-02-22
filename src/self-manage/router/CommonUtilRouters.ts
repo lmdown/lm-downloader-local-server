@@ -33,9 +33,9 @@ router.get('/user-home-dir', (req:Request, res:Response) => {
 });
 
 // get all models for app
-router.get('/installed-model-files/:appInstallName', (req:Request, res:Response) => {
+router.get('/installed-model-files/:appInstallName', async (req:Request, res:Response) => {
   const appInstallName = req.params.appInstallName
-  const models = AppModelsUtil.getAllModels(appInstallName)
+  const models = await AppModelsUtil.getAllModels(appInstallName)
   res.json({
     models: models
   });
