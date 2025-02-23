@@ -33,7 +33,7 @@ class WSServer {
     } else {
       fullEnv = {
         HOME: processEnv.HOME,
-        PATH: processEnv.PATH
+        PATH: processEnv.PATH + ':/usr/local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/X11/bin:/Library/Apple/usr/bin'
       }
     }
     fullEnv = Object.assign(fullEnv, CopyValueUtil.copyOllamaEnvVars())
