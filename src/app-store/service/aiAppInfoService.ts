@@ -160,9 +160,20 @@ export default class AIAppInfoService {
   }
 
   async getAIAppInfo(req: Request) {
-    const id = req.params.id
+    let id = req.params.id
+    const installName = req.params.installName
     const locale = req.query.locale
-    const aiApp = await AIApp.findOne({ raw: true, where: { id } });
+    const queryOptions = {}
+    if(id) {
+      //@ts-ignore
+      queryOptions.id = id
+    }
+    if(installName) {
+      //@ts-ignore
+      queryOptions.installName = installName
+    }
+    const aiApp = await AIApp.findOne({ raw: true, where: queryOptions });
+    id = String(aiApp.id)
     if(!aiApp) {
       return {};
     }

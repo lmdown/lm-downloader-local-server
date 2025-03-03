@@ -15,8 +15,17 @@ export const getAIAppInfoList = async (req:Request, res:Response) => {
   }
 };
 
+export const getAIAppInfoByInstallName = async (req:Request, res:Response) => {
+  try {
+    const record = await service.getAIAppInfo(req)
+    res.json(record);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal server error');
+  }
+}
+
 export const getAIAppInfo = async (req:Request, res:Response) => {
-  const lang = req.query.lang as string;
   try {
     // const records = await AIApp.findOne({ where: query });
     const record = await service.getAIAppInfo(req)
